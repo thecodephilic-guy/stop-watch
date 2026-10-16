@@ -185,6 +185,43 @@ body {
   margin: 0 1px 0 3px;
 }
 
+/* ─── Keyboard shortcuts hint ───────────────────────────────── */
+.shortcuts-bar {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.shortcut-key {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-dim);
+  letter-spacing: 0.04em;
+}
+
+.shortcut-key kbd {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text);
+  background: var(--surface-2);
+  border: 1px solid var(--border-bright);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  padding: 2px 6px;
+  line-height: 1.4;
+}
+
+.shortcut-key .key-label {
+  color: var(--text-dim);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
 /* ─── Controls ───────────────────────────────────────────────── */
 .controls {
   display: flex;
@@ -360,54 +397,63 @@ body {
 .lap-elapsed  { font-family: var(--mono); font-size: 12px; font-weight: 500; color: var(--text-bright); }
 .lap-split    { font-family: var(--mono); font-size: 11px; color: var(--green); text-align: right; }
 
-/* ─── Responsive: Tablet ─────────────────────────────────────── */
+/* ─── Responsive: Tablet + Mobile shared ────────────────────── */
 @media (max-width: 740px) {
+  /* Root must have no padding so the app can fill 100svh exactly */
+  #root {
+    padding: 0;
+    align-items: stretch;
+  }
+
   .app {
     grid-template-columns: 1fr;
-    grid-template-rows: auto auto 1fr;
-    height: auto;
-    max-height: none;
-    min-height: 92svh;
+    /* row 1 = header (shrinks to content)
+       row 2 = laps   (fills remaining space → scrolls inside)
+       row 3 = timer  (shrinks to content, pinned at bottom) */
+    grid-template-rows: auto 1fr auto;
+    /* FIXED height is critical — without it 1fr has nothing to measure against */
+    height: 100svh;
+    max-height: 100svh;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
   }
 
-  .app-header { grid-column: 1; }
+  .app-header { grid-column: 1; grid-row: 1; }
 
-  .left-panel {
+  /* Laps — row 2, fills space, inner list scrolls */
+  .lap-panel {
     grid-column: 1;
     grid-row: 2;
-    border-right: none;
+    overflow: hidden;          /* contain the inner .lap-list scroll */
     border-bottom: 1px solid var(--border);
-    padding: 24px 20px 20px;
-    gap: 20px;
+    max-height: none;
   }
+
+  /* Timer + controls — row 3, anchored at bottom */
+  .left-panel {
+    grid-column: 1;
+    grid-row: 3;
+    border-right: none;
+    border-top: 1px solid var(--border);
+    padding: 20px 20px 24px;
+    gap: 16px;
+    justify-content: flex-end;
+  }
+
+  /* Hide shortcuts on tablet/mobile */
+  .shortcuts-bar { display: none; }
 
   .digital-time { font-size: 48px; }
   .digital-time .seg-ms { font-size: 30px; }
-
-  .lap-panel {
-    grid-column: 1;
-    grid-row: 3;
-    max-height: 320px;  /* fixed height for scroll on tablet */
-  }
 }
 
 /* ─── Responsive: Mobile ─────────────────────────────────────── */
 @media (max-width: 480px) {
-  #root { padding: 0; }
-
-  .app {
-    border-radius: 0;
-    border-left: none;
-    border-right: none;
-    min-height: 100svh;
-  }
-
   .digital-time { font-size: 38px; }
   .digital-time .seg-ms { font-size: 24px; }
 
-  .left-panel { padding: 20px 16px 16px; }
-
-  .lap-panel { max-height: 280px; }
+  .left-panel { padding: 16px 16px 20px; gap: 14px; }
 
   .lap-row,
   .lap-cols-header { padding-left: 14px; padding-right: 14px; }
