@@ -1,4 +1,5 @@
 import { useRef } from "react";
+import { Analytics } from "@vercel/analytics/next";
 import useStopwatch from "./hooks/useStopwatch";
 import "./App.css";
 import LapRow from "./components/LapRow";
@@ -29,6 +30,8 @@ function App() {
 
   return (
     <div className="app" ref={appRef}>
+      <Analytics />
+
       <header className="app-header">
         <div className={`logo-dot ${dotClass}`} ref={logoDotRef} />
         <span className="app-title">Stopwatch.sohail.world</span>
