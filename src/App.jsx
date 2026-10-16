@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { Analytics } from "@vercel/analytics/next";
+import { Analytics } from "@vercel/analytics/react";
 import useStopwatch from "./hooks/useStopwatch";
 import "./App.css";
 import LapRow from "./components/LapRow";
